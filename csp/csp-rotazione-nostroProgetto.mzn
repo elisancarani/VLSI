@@ -193,6 +193,14 @@ endif;
  
 solve:: search_ann_seq :: restart_ann minimize l;
  
+output [
+    "solution= ", show(solution), "\n",
+    "sizes= ", show(sizes), "\n",
+    "rotation= ", show(rotation), "\n",
+    "l= ", show(l), "\n",
+    "w= ", show(w), "\n",
+    "n= ", show(n), "\n",
+];
 
  
  
