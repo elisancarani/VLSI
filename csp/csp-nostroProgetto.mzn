@@ -74,26 +74,106 @@ constraint forall(s1,s2 in N where s1 > s2)(
 
 
 
-%output["\(solution)"];
 
+
+%DONT CHANGE THIS SEQUENCE
+int: heur_type = 1;
+int: seq_type = 1;
+int: rest_type = 4;
+
+ann: search_ann_l =
+if heur_type == 1 then
+  int_search([l], input_order, indomain_min, complete)
+elseif heur_type == 2 then
+  int_search([l], first_fail, indomain_min, complete)
+elseif heur_type == 3 then
+  int_search([l], dom_w_deg, indomain_min, complete)
+elseif heur_type == 4 then
+  int_search([l], input_order, indomain_random, complete)
+elseif heur_type == 5 then
+  int_search([l], first_fail, indomain_random, complete)
+else
+  int_search([l], dom_w_deg, indomain_random, complete)
+endif;
+  
+ann: search_ann_s1 =
+if heur_type == 1 then
+  int_search([solution[s,1] | s in order], input_order, indomain_min, complete)
+elseif heur_type == 2 then
+  int_search([solution[s,1] | s in order], first_fail, indomain_min, complete)
+elseif heur_type == 3 then
+  int_search([solution[s,1] | s in order], dom_w_deg, indomain_min, complete)
+elseif heur_type == 4 then
+  int_search([solution[s,1] | s in order], input_order, indomain_random, complete)
+elseif heur_type == 5 then
+  int_search([solution[s,1] | s in order], first_fail, indomain_random, complete)
+else
+  int_search([solution[s,1] | s in order], dom_w_deg, indomain_random, complete)
+endif;
+
+ann: search_ann_s2 =
+if heur_type == 1 then
+  int_search([solution[s,2] | s in order], input_order, indomain_min, complete)
+elseif heur_type == 2 then
+  int_search([solution[s,2] | s in order], first_fail, indomain_min, complete)
+elseif heur_type == 3 then
+  int_search([solution[s,2] | s in order], dom_w_deg, indomain_min, complete)
+elseif heur_type == 4 then
+  int_search([solution[s,2] | s in order], input_order, indomain_random, complete)
+elseif heur_type == 5 then
+  int_search([solution[s,2] | s in order], first_fail, indomain_random, complete)
+else
+  int_search([solution[s,2] | s in order], dom_w_deg, indomain_random, complete)
+endif;
+
+ann: search_ann_seq = 
+if seq_type == 1 then
+  seq_search([search_ann_l, search_ann_s1,search_ann_s2])
+elseif seq_type == 2 then
+  seq_search([search_ann_l, search_ann_s2,search_ann_s1])
+elseif seq_type == 3 then
+  seq_search([search_ann_s1, search_ann_s2,search_ann_l])
+elseif seq_type == 4 then
+  seq_search([search_ann_s2, search_ann_s1,search_ann_l])
+elseif seq_type == 5 then
+  seq_search([search_ann_s1, search_ann_l,search_ann_s2]) 
+else
+  seq_search([search_ann_s2, search_ann_l,search_ann_s1]) 
+endif;
+  
+ann: restart_ann =
+if rest_type == 1 then
+  restart_constant(100)
+elseif rest_type == 2 then
+  restart_linear(100)
+elseif rest_type == 3 then
+  restart_geometric(1.5, 100)
+else restart_luby(100)
+endif;
+  
+
+%output["\(silicons)"];
 %solve minimize l;
 %solve :: int_search(solution, input_order, indomain_min)  minimize l;
 
-%solving this way to ensure the bottom left heuristic
-solve ::
+/*solve ::
  int_search([l], input_order, indomain_min, complete)
  :: seq_search([
  int_search([l], input_order, indomain_min, complete),
- int_search([solution[s,2] | s in order], input_order, indomain_min,complete),
  int_search([solution[s,1] | s in order], input_order, indomain_min,complete),
+ int_search([solution[s,2] | s in order], input_order, indomain_min,complete),
+ ])
+ minimize l;*/
  
- ])%:: restart_luby(1000)
- minimize l;
+solve:: search_ann_seq :: restart_ann minimize l;
  
-output["\(silicons), \(solution), \(l), \(w), \(n)"];
-
-
-
+output [
+    "solution= ", show(solution), "\n",
+    "silicons= ", show(silicons), "\n",
+    "l= ", show(l), "\n",
+    "w= ", show(w), "\n",
+    "n= ", show(n), "\n",
+];
 
 
 
@@ -118,7 +198,3 @@ constraint forall(s1 in N)(
 /*constraint forall(s1,s2 in N where s1<s2)(
     (solution[s1,1] != solution[s2,1]) \/ (solution[s1,2] != solution[s2,2])
 ); */
-
-    
-
-
