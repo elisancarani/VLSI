@@ -16,29 +16,20 @@ int: minlen = (sum(i in N)(silicons[i,2]*silicons[i,1]))div w;
 
 var minlen..maxlen : l;
 
-%array [N] of var 0..1: rotation; %to know if the silicon is rotated or not 0=not rotated 10=rotated
-array [N] of var 0..1: rotation;
-array [N, 1..2] of var 0..maxlen:sizes;% = [if rotation[s]=0 then [silicons[s,1], silicons[s,2]] else [silicons[s,2], silicons[s,1]] endif | s in N];  %sizes is just like silicons, but instead of being all in one orientation, they can (or cannot) be flipped
+array [N] of var 0..1: rotation; %to know if the silicon is rotated or not 0=not rotated 10=rotated
+array [N, 1..2] of var 0..maxlen:sizes;  %sizes is just like silicons, but instead of being all in one orientation, they can (or cannot) be flipped
 array [N, 1..2] of var 0..maxlen:solution;
 
-constraint forall(s in N)(
-  if rotation[s]=0 then
-    sizes[s,1] = silicons[s,1] /\ sizes[s,2] =silicons[s,2]
-  else
-    sizes[s,1] = silicons[s,2] /\ sizes[s,2] =silicons[s,1]
-  endif
+%constraint to make sure that the silicons are either in one orientation or the other
+constraint forall(s in N)( 
+    ((sizes[s,1] = silicons[s,1]) /\ (sizes[s,2] = silicons[s,2]) /* /\ (rotation[s]=0)*/) \/ 
+    ((sizes[s,1] = silicons[s,2]) /\ (sizes[s,2] = silicons[s,1]) /* /\ (rotation[s]=1)*/)
 );
 
-%constraint to make sure that the silicons are either in one orientation or the other
-%constraint forall(s in N)( 
-%    ((sizes[s,1] = silicons[s,1]) /\ (sizes[s,2] = silicons[s,2]) /* /\ (rotation[s]=0)*/) \/ 
-%    ((sizes[s,1] = silicons[s,2]) /\ (sizes[s,2] = silicons[s,1]) /* /\ (rotation[s]=1)*/)
-%);
-
-%constraint forall(s in N)( 
-%    ((sizes[s,1] = silicons[s,1]) /\ (rotation[s]=0)) \/
-%    ((sizes[s,1] = silicons[s,2]) /\ (rotation[s]=1))
-%    );
+constraint forall(s in N)( 
+    ((sizes[s,1] = silicons[s,1]) /\ (rotation[s]=0)) \/
+    ((sizes[s,1] = silicons[s,2]) /\ (rotation[s]=1))
+    );
 
 %get an array of the indexes ordered by height of the rectangle, because the taller the silicon, the more important the placement 
 array[int] of int: order = sort_by(N, [-silicons[s,2]*silicons[s,1] | s in N]);   % try with area perimeter excetera, with area it's faster
@@ -111,10 +102,12 @@ constraint forall(s in N)(
   else true endif
 );
 
-
+/*DO NOT CHANGE THE ORDER OF THIS VARIABLES*/
+/*******************************/
 int: heur_type = 1;
 int: seq_type = 1;
-int: rest_type = 4;
+int: rest_type = 1;
+/*******************************/
 
 ann: search_ann_l =
 if heur_type == 1 then
@@ -213,7 +206,7 @@ output [
 
  
  
- %we make sure that the two silicons don't overlap
+%we make sure that the two silicons don't overlap
 %if we consider one silicon, we make sure that the other one is on the area adjacent to it
 /*predicate my_no_overlap(var int:x1, var int:x2, var int:y1, var int:y2, var int:w1, var int:w2, var int:l1, var int:l2) =
   x1 + w1 <= x2\/
@@ -225,7 +218,3 @@ constraint forall(s1 in N)(
    forall(s2 in N where s1 < s2)(
      my_no_overlap(solution[s1,1], solution[s2,1], solution[s1,2], solution[s2,2], sizes[s1,1], sizes[s2,1], sizes[s1,2], sizes[s2,2])
 ));*/
-
-    
-
-
