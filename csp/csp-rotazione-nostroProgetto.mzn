@@ -105,7 +105,7 @@ constraint forall(s in N)(
 
 int: heur_type = 1;
 int: seq_type = 1;
-int: rest_type = 1;
+int: rest_type = 4;
 
 ann: search_ann_l =
 if heur_type == 1 then
@@ -157,35 +157,43 @@ if seq_type == 1 then
   seq_search([search_ann_l, search_ann_s1,search_ann_s2])
 elseif seq_type == 2 then
   seq_search([search_ann_l, search_ann_s2,search_ann_s1])
-elseif seq_type == 2 then
+elseif seq_type == 3 then
   seq_search([search_ann_s1, search_ann_s2,search_ann_l])
-elseif seq_type == 2 then
-  seq_search([search_ann_l, search_ann_s1,search_ann_s2])
+elseif seq_type == 4 then
+  seq_search([search_ann_s2, search_ann_s1,search_ann_l])
+elseif seq_type == 5 then
+  seq_search([search_ann_s1, search_ann_l,search_ann_s2]) 
+else
+  seq_search([search_ann_s2, search_ann_l,search_ann_s1]) 
+endif;
   
-      
+ann: restart_ann =
+if rest_type == 1 then
+  restart_constant(100)
+elseif rest_type == 2 then
+  restart_linear(100)
+elseif rest_type == 3 then
+  restart_geometric(1.5, 100)
+else restart_luby(100)
+endif;
   
 
 %output["\(silicons)"];
 %solve minimize l;
 %solve :: int_search(solution, input_order, indomain_min)  minimize l;
-solve ::
+
+/*solve ::
  int_search([l], input_order, indomain_min, complete)
  :: seq_search([
  int_search([l], input_order, indomain_min, complete),
  int_search([solution[s,1] | s in order], input_order, indomain_min,complete),
  int_search([solution[s,2] | s in order], input_order, indomain_min,complete),
- 
  ])
- minimize l;
+ minimize l;*/
  
+solve:: search_ann_seq :: restart_ann minimize l;
  
- 
- 
- 
- 
- 
- 
- 
+
  
  
  %we make sure that the two silicons don't overlap
@@ -200,7 +208,3 @@ constraint forall(s1 in N)(
    forall(s2 in N where s1 < s2)(
      my_no_overlap(solution[s1,1], solution[s2,1], solution[s1,2], solution[s2,2], sizes[s1,1], sizes[s2,1], sizes[s1,2], sizes[s2,2])
 ));*/
-
-    
-
-
