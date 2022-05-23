@@ -93,14 +93,21 @@ constraint forall(s1,s2 in N where s1 > s2)(
 %if base is as long as w, lays it not rotated
 constraint forall(s in N)(
   if(silicons[s,1] = w) then
-    sizes[s,1] = silicons[s,1] /\ sizes[s,2] = silicons[s,2] /\ rotation[s] = 0
+    rotation[s] = 0
   else true endif
 );
 
 %if height is as long as w, lays it rotated
 constraint forall(s in N)(
   if(silicons[s,2] = w) then
-    sizes[s,1] = silicons[s,2] /\ sizes[s,2] = silicons[s,1] /\ rotation[s] = 1
+    rotation[s] = 1
+  else true endif
+);
+
+%if height longer than w, cant rotate
+constraint forall(s in N)(
+  if(silicons[s,2] > w) then
+    rotation[s] = 0
   else true endif
 );
 
@@ -112,8 +119,15 @@ constraint forall(s in N)(
 );
 
 
-int: heur_type = 1;
-int: seq_type = 1;
+constraint /*symmetry_breaking_constraint*/(
+  solution[order[1], 1] == 0 /\ solution[order[1], 2] == 0
+);
+
+
+
+
+int: heur_type = 6;
+int: seq_type = 2;
 int: rest_type = 4;
 
 ann: search_ann_l =
@@ -189,7 +203,7 @@ endif;
 
 %output["\(silicons)"];
 %solve minimize l;
-%solve :: int_search(solution, input_order, indomain_min)  minimize l;
+solve :: int_search([l], dom_w_deg, indomain_random) :: restart_luby(250)  minimize l;
 
 /*solve ::
  int_search([l], input_order, indomain_min, complete)
@@ -200,16 +214,10 @@ endif;
  ])
  minimize l;*/
  
-solve:: search_ann_seq :: restart_ann minimize l;
- 
-output [
-    "solution= ", show(solution), "\n",
-    "sizes= ", show(sizes), "\n",
-    "rotation= ", show(rotation), "\n",
-    "l= ", show(l), "\n",
-    "w= ", show(w), "\n",
-    "n= ", show(n), "\n",
-];
+%solve:: search_ann_seq :: restart_ann minimize l;
+%solve:: search_ann_l :: search_ann_seq :: restart_ann minimize l;
+%solve:: search_ann_l :: search_ann_s1 :: search_ann_s2 :: restart_ann minimize l;
+/*solve:: search_ann_s1 :: search_ann_s2 :: search_ann_s1 :: search_ann_s1 :: restart_ann minimize l;*/
 
  
  
