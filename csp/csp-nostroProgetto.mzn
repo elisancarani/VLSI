@@ -13,13 +13,12 @@ int: n;
 set of int: N = 1..n;
 array [1..n, 1..2] of int: silicons;
 
-int: maxlen = sum(i in N)(silicons[i,2]);%maximum possible length, sum of all the heights of the single silicons
+int: maxlen = sum(i in N)(silicons[i,2]); %maximum possible length, sum of all the heights of the single silicons
 int: minlen = (sum(i in N)(silicons[i,2]*silicons[i,1]))div w;
 
-var minlen..maxlen : l;   %= max(s in N)(solution[s,2] + silicons[s,2]); 
+var minlen..maxlen : l; 
 
 int : minsize = min(s in N, i in 1..2)(silicons[s, i]);
-%array [N, 1..2] of var 0..max(maxlen-minsize,w-minsize): solution;
 array [N, 1..2] of var 0..maxlen: solution;
 
 %get an array of the indexes ordered by height of the rectangle, because the taller the silicon, the more important the placement 
@@ -44,9 +43,7 @@ constraint
         [silicons[s,1] | s in N],
         [silicons[s,2] | s in N]
     );
-    
-    
-
+      
 %% ensure no overlap of silicons, redundant but speed ups the search pruning faster
 constraint cumulative([solution[s,1] | s in N], [silicons[s,1] | s in N], [silicons[s,2] | s in N], l);
 constraint cumulative([solution[s,2] | s in N], [silicons[s,2] | s in N], [silicons[s,1] | s in N], w); 
@@ -57,7 +54,6 @@ constraint forall(s1 in order)(
   member([0] ++ [solution[s2,2] + silicons[s2,2] | s2 in order where s2 != s1], solution[s1,2])
 );
 
-
 %symmetry breaking between two rectangles of the same dimentions, so that only one of the two solutions is considered
 constraint forall(s1,s2 in N where s1 > s2)(
    if(silicons[s1,1] = silicons[s2,1] /\ silicons[s1,2] = silicons[s2,2]) then
@@ -65,19 +61,8 @@ constraint forall(s1,s2 in N where s1 > s2)(
      else true endif
 );
 
-
-% symmetry breaking
-/*constraint symmetry_breaking_constraint(
-  lex_less([solution[1,1], solution[1,2]], [solution[2,1], solution[2,2]])
-);*/
-
-
-
-
-
-
 %DONT CHANGE THIS SEQUENCE
-int: heur_type = 1;
+int: heur_type = 2;
 int: seq_type = 1;
 int: rest_type = 4;
 
@@ -152,19 +137,7 @@ else restart_luby(100)
 endif;
   
 
-%output["\(silicons)"];
-%solve minimize l;
-%solve :: int_search(solution, input_order, indomain_min)  minimize l;
-
-/*solve ::
- int_search([l], input_order, indomain_min, complete)
- :: seq_search([
- int_search([l], input_order, indomain_min, complete),
- int_search([solution[s,1] | s in order], input_order, indomain_min,complete),
- int_search([solution[s,2] | s in order], input_order, indomain_min,complete),
- ])
- minimize l;*/
- 
+%solve :: int_search([l], input_order, indomain_min) :: restart_luby(250) minimize l;%
 solve:: search_ann_seq :: restart_ann minimize l;
  
 output [
@@ -198,3 +171,7 @@ constraint forall(s1 in N)(
 /*constraint forall(s1,s2 in N where s1<s2)(
     (solution[s1,1] != solution[s2,1]) \/ (solution[s1,2] != solution[s2,2])
 ); */
+
+    
+
+
