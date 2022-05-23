@@ -21,6 +21,10 @@ array [N] of var 0..1: rotation;
 array [N, 1..2] of var 0..maxlen:sizes;% = [if rotation[s]=0 then [silicons[s,1], silicons[s,2]] else [silicons[s,2], silicons[s,1]] endif | s in N];  %sizes is just like silicons, but instead of being all in one orientation, they can (or cannot) be flipped
 array [N, 1..2] of var 0..maxlen:solution;
 
+%get an array of the indexes ordered by height of the rectangle, because the taller the silicon, the more important the placement 
+array[int] of int: order = sort_by(N, [-silicons[s,2]*silicons[s,1] | s in N]);   % try with area perimeter excetera, with area it's faster
+
+
 constraint forall(s in N)(
   if rotation[s]=0 then
     sizes[s,1] = silicons[s,1] /\ sizes[s,2] =silicons[s,2]
@@ -29,23 +33,7 @@ constraint forall(s in N)(
   endif
 );
 
-%constraint to make sure that the silicons are either in one orientation or the other
-%constraint forall(s in N)( 
-%    ((sizes[s,1] = silicons[s,1]) /\ (sizes[s,2] = silicons[s,2]) /* /\ (rotation[s]=0)*/) \/ 
-%    ((sizes[s,1] = silicons[s,2]) /\ (sizes[s,2] = silicons[s,1]) /* /\ (rotation[s]=1)*/)
-%);
-
-%constraint forall(s in N)( 
-%    ((sizes[s,1] = silicons[s,1]) /\ (rotation[s]=0)) \/
-%    ((sizes[s,1] = silicons[s,2]) /\ (rotation[s]=1))
-%    );
-
-%get an array of the indexes ordered by height of the rectangle, because the taller the silicon, the more important the placement 
-array[int] of int: order = sort_by(N, [-silicons[s,2]*silicons[s,1] | s in N]);   % try with area perimeter excetera, with area it's faster
-
-
-%constraints
-%ensuring that the silicones are within the width
+%constraint ensuring that the silicones are within the width
 constraint forall(s in N)(
     solution[s,1] + sizes[s,1] <= w
 );
@@ -69,7 +57,6 @@ constraint cumulative([solution[s,1] | s in N], [sizes[s,1] | s in N], [sizes[s,
 constraint cumulative([solution[s,2] | s in N], [sizes[s,2] | s in N], [sizes[s,1] | s in N], w);
     
 %WITH ROTATION THIS ONE MAKES IT WORK
-%TO TEST ON THE NON ROTATION FILE
 constraint forall(s1,s2 in N where s1<s2)(
     (solution[s1,1] != solution[s2,1]) \/ (solution[s1,2] != solution[s2,2])
 );
@@ -93,14 +80,14 @@ constraint forall(s1,s2 in N where s1 > s2)(
 %if base is as long as w, lays it not rotated
 constraint forall(s in N)(
   if(silicons[s,1] = w) then
-    rotation[s] = 0
+    sizes[s,1] = silicons[s,1] /\ sizes[s,2] = silicons[s,2] /\ rotation[s] = 0
   else true endif
 );
 
 %if height is as long as w, lays it rotated
 constraint forall(s in N)(
   if(silicons[s,2] = w) then
-    rotation[s] = 1
+    sizes[s,1] = silicons[s,2] /\ sizes[s,2] = silicons[s,1] /\ rotation[s] = 1
   else true endif
 );
 
@@ -119,17 +106,9 @@ constraint forall(s in N)(
 );
 
 
-constraint /*symmetry_breaking_constraint*/(
-  solution[order[1], 1] == 0 /\ solution[order[1], 2] == 0
-);
-
-
-
-
 int: heur_type = 6;
-int: seq_type = 2;
-int: rest_type = 4;
-
+int: rest_type = 4;  
+  
 ann: search_ann_l =
 if heur_type == 1 then
   int_search([l], input_order, indomain_min, complete)
@@ -143,52 +122,7 @@ elseif heur_type == 5 then
   int_search([l], first_fail, indomain_random, complete)
 else
   int_search([l], dom_w_deg, indomain_random, complete)
-endif;
-  
-ann: search_ann_s1 =
-if heur_type == 1 then
-  int_search([solution[s,1] | s in order], input_order, indomain_min, complete)
-elseif heur_type == 2 then
-  int_search([solution[s,1] | s in order], first_fail, indomain_min, complete)
-elseif heur_type == 3 then
-  int_search([solution[s,1] | s in order], dom_w_deg, indomain_min, complete)
-elseif heur_type == 4 then
-  int_search([solution[s,1] | s in order], input_order, indomain_random, complete)
-elseif heur_type == 5 then
-  int_search([solution[s,1] | s in order], first_fail, indomain_random, complete)
-else
-  int_search([solution[s,1] | s in order], dom_w_deg, indomain_random, complete)
-endif;
-
-ann: search_ann_s2 =
-if heur_type == 1 then
-  int_search([solution[s,2] | s in order], input_order, indomain_min, complete)
-elseif heur_type == 2 then
-  int_search([solution[s,2] | s in order], first_fail, indomain_min, complete)
-elseif heur_type == 3 then
-  int_search([solution[s,2] | s in order], dom_w_deg, indomain_min, complete)
-elseif heur_type == 4 then
-  int_search([solution[s,2] | s in order], input_order, indomain_random, complete)
-elseif heur_type == 5 then
-  int_search([solution[s,2] | s in order], first_fail, indomain_random, complete)
-else
-  int_search([solution[s,2] | s in order], dom_w_deg, indomain_random, complete)
-endif;
-
-ann: search_ann_seq = 
-if seq_type == 1 then
-  seq_search([search_ann_l, search_ann_s1,search_ann_s2])
-elseif seq_type == 2 then
-  seq_search([search_ann_l, search_ann_s2,search_ann_s1])
-elseif seq_type == 3 then
-  seq_search([search_ann_s1, search_ann_s2,search_ann_l])
-elseif seq_type == 4 then
-  seq_search([search_ann_s2, search_ann_s1,search_ann_l])
-elseif seq_type == 5 then
-  seq_search([search_ann_s1, search_ann_l,search_ann_s2]) 
-else
-  seq_search([search_ann_s2, search_ann_l,search_ann_s1]) 
-endif;
+endif;  
   
 ann: restart_ann =
 if rest_type == 1 then
@@ -200,25 +134,8 @@ elseif rest_type == 3 then
 else restart_luby(100)
 endif;
   
-
-%output["\(silicons)"];
-%solve minimize l;
-solve :: int_search([l], dom_w_deg, indomain_random) :: restart_luby(250)  minimize l;
-
-/*solve ::
- int_search([l], input_order, indomain_min, complete)
- :: seq_search([
- int_search([l], input_order, indomain_min, complete),
- int_search([solution[s,1] | s in order], input_order, indomain_min,complete),
- int_search([solution[s,2] | s in order], input_order, indomain_min,complete),
- ])
- minimize l;*/
- 
-%solve:: search_ann_seq :: restart_ann minimize l;
-%solve:: search_ann_l :: search_ann_seq :: restart_ann minimize l;
-%solve:: search_ann_l :: search_ann_s1 :: search_ann_s2 :: restart_ann minimize l;
-/*solve:: search_ann_s1 :: search_ann_s2 :: search_ann_s1 :: search_ann_s1 :: restart_ann minimize l;*/
-
+  
+solve :: search_ann_l :: restart_ann  minimize l;
  
  
  %we make sure that the two silicons don't overlap
