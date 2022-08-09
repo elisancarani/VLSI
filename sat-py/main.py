@@ -49,14 +49,17 @@ def solve_problem(input_directory):
             print("model solved with length:", l, "in time: ", time, "s")
             print(s.model())
             solved = True
+            print(time)
         else:
             print("Failed to solve with length: ", l)
             l = l + 1
+
+    get_solution(s.model(), solution, w, l, n, maxlen)
     return s.model(), l
 
 
 def main():
-    input_directory = "./instances/ins-10.txt"
+    input_directory = "./instances/ins-1.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
