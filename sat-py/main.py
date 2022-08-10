@@ -16,7 +16,7 @@ def solve_problem(input_directory):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = min(y)
+    l = max(y)
 
     solved = False
     while l <= maxlen and solved == False:
@@ -31,14 +31,14 @@ def solve_problem(input_directory):
             possible_sols = []
             for i in range(w - x[k] + 1):
                 for j in range(l - y[k] + 1):
-                    circuit = []
+                    silicon = []
                     for ox in range(w):
                         for oy in range(l):
                             if i <= ox < i + x[k] and j <= oy < j + y[k]:
-                                circuit.append(solution[ox][oy][k])
+                                silicon.append(solution[ox][oy][k])
                             else:
-                                circuit.append(Not(solution[ox][oy][k]))
-                    possible_sols.append(And(circuit))
+                                silicon.append(Not(solution[ox][oy][k]))
+                    possible_sols.append(And(silicon))
             s.add(exactly_one(possible_sols))
 
         # puts the silicon with larger area in the bottom left corner
@@ -47,7 +47,7 @@ def solve_problem(input_directory):
         if s.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            print(s.model())
+            #print(s.model())
             solved = True
             print(time)
         else:
