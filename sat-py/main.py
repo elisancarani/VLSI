@@ -16,7 +16,7 @@ def solve_problem(input_directory):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = min(y)
+    l = max(y)
 
     solved = False
     while l <= maxlen and solved == False:
