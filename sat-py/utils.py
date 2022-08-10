@@ -37,6 +37,25 @@ def exactly_one(bool_vars):
     return at_most_one(bool_vars) + [at_least_one(bool_vars)]
 #********************************************************************************
 
+def get_solution(model, solution, w, l, n, maxlen, r=None):
+    # Create solution array
+    solution = np.array([[[is_true(model[solution[i][j][k]]) for k in range(n)] for j in range(maxlen)] for i in range(w)])
+    p_x_sol = []
+    p_y_sol = []
+    rot_sol = [False for i in range(n)]
+
+    for k in range(n):
+        x_ids, y_ids = solution[:, :, k].nonzero()
+        x = np.min(x_ids)
+        y = np.min(y_ids)
+        p_x_sol.append(x)
+        p_y_sol.append(y)
+        if r is not None:
+            rot_sol[k] = is_true(model[r[k]])
+    print(p_x_sol, p_y_sol, rot_sol, l)
+
+    return p_x_sol, p_y_sol, rot_sol, l
+
 """
 def display_nqueens(sol):
     board = [[0] * len(sol) for i in range(len(sol))]

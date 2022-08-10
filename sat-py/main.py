@@ -56,7 +56,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    input_directory = "./instances/ins-10.txt"
+    input_directory = "./instances/ins-1.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
