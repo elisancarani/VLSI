@@ -16,15 +16,20 @@ def solve_problem(input_directory):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = max(y)
+
+    sum = 0
+    for k in range(n):
+        sum += x[k] * y[k]
+    l = math.floor(sum / w)
+
 
     solved = False
     while l <= maxlen and solved == False:
-        s = Solver()
+        solver = Solver()
         # no overlapping
         for j in range(l):
             for i in range(w):
-                s.add(at_most_one([solution[i][j][k] for k in range(n)]))
+                solver.add(at_most_one([solution[i][j][k] for k in range(n)]))
 
         # makes sure silicons fit
         for k in range(n):
@@ -42,24 +47,26 @@ def solve_problem(input_directory):
             s.add(exactly_one(possible_sols))
 
         # puts the silicon with larger area in the bottom left corner
-        s.add([And(solution[0][0][biggest_silicon])])
+        solver.add([And(solution[0][0][biggest_silicon])])
 
-        if s.check() == sat:
+        if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            #print(s.model())
             solved = True
             print(time)
         else:
             print("Failed to solve with length: ", l)
             l = l + 1
+            
 
-    get_solution(s.model(), solution, w, l, n, maxlen)
-    return s.model(), l
+    get_solution(solver.model(), solution, w, l, n, maxlen)
+    
+    return solver.model(), l
+
 
 
 def main():
-    input_directory = "./instances/ins-1.txt"
+    input_directory = "./instances/ins-4.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
