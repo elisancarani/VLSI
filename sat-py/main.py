@@ -17,14 +17,11 @@ def solve_problem(input_directory):
             biggest_silicon = k
 
 
-    #l = min(y)
     sum = 0
     for k in range(n):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
 
-
-    l = max(y)
 
     solved = False
     while l <= maxlen and solved == False:
@@ -39,15 +36,15 @@ def solve_problem(input_directory):
             possible_sols = []
             for i in range(w - x[k] + 1):
                 for j in range(l - y[k] + 1):
-                    circuit = []
+                    silicon = []
                     for ox in range(w):
                         for oy in range(l):
                             if i <= ox < i + x[k] and j <= oy < j + y[k]:
-                                circuit.append(solution[ox][oy][k])
+                                silicon.append(solution[ox][oy][k])
                             else:
-                                circuit.append(Not(solution[ox][oy][k]))
-                    possible_sols.append(And(circuit))
-            solver.add(exactly_one(possible_sols))
+                                silicon.append(Not(solution[ox][oy][k]))
+                    possible_sols.append(And(silicon))
+            s.add(exactly_one(possible_sols))
 
         # puts the silicon with larger area in the bottom left corner
         solver.add([And(solution[0][0][biggest_silicon])])
@@ -55,14 +52,17 @@ def solve_problem(input_directory):
         if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            #print(solver.model())
             solved = True
+            print(time)
         else:
             print("Failed to solve with length: ", l)
             l = l + 1
+            
 
     get_solution(solver.model(), solution, w, l, n, maxlen)
+    
     return solver.model(), l
+
 
 
 def main():
