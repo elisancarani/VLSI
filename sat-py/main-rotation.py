@@ -18,20 +18,27 @@ def solve_problem(input_directory):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = min(y) #*TO CHECK*
+    sum = 0
+    for k in range(n):
+        sum += x[k] * y[k]
+    l = math.floor(sum / w)
 
     solved = False
-
     while l <= maxlen and solved == False:
-        s = Solver()
+        solver = Solver()
 
         # no overlapping
         for j in range(l):
             for i in range(w):
-                s.add(at_most_one([solution[i][j][k] for k in range(n)]))
+                solver.add(at_most_one([solution[i][j][k] for k in range(n)]))
 
         # puts the silicon with larger area in the bottom left corner
-        s.add([And(solution[0][0][biggest_silicon])])
+        solver.add([And(solution[0][0][biggest_silicon])])
+
+        #if square chips do not rotate
+        for k in range(n):
+            if x[k] == y[k]:
+                solver.add([Not(rotation[k])])
 
         # makes sure silicons fit
         for k in range(n):
@@ -48,7 +55,7 @@ def solve_problem(input_directory):
                     possible_sols.append(And(silicons_position))
 
             non_rotated_silicons = And(Not(rotation[k]), And(exactly_one(possible_sols)))
-            #s.add(exactly_one(possible_sols))
+            #solver.add(exactly_one(possible_sols))
 
             possible_sols = []
             for i in range(w - y[k] + 1): #inverted x and y for handling rotation
@@ -64,24 +71,34 @@ def solve_problem(input_directory):
 
             rotated_silicons = And(rotation[k], And(exactly_one(possible_sols)))
 
-            s.add(exactly_one([non_rotated_silicons, rotated_silicons]))
+            solver.add(exactly_one([non_rotated_silicons, rotated_silicons]))
 
-        if s.check() == sat:
+        if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            #print(s.model())
+            #print(solver.model())
             solved = True
         else:
             print("Failed to solve with length : ", l)
             l = l + 1
             #condition to stop
 
-    get_solution(s.model(), solution, w, l, n, maxlen)
-    return s.model(), l
+    p_x_sol, p_y_sol, rot_sol, l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation)
+
+    size_l = np.max(p_y_sol)
+    print("print  p_y_sol_size_l", size_l)
+    output_matrix = display_solution(p_x_sol, p_y_sol, w, n, x, y, maxlen)
+
+    #PLOT SOLUTION
+    fig, ax = plt.subplots(figsize=(5, 5))
+    sns.heatmap(output_matrix,cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+    plt.show()
+
+    return p_x_sol, p_y_sol, rot_sol, l
 
 
 def main():
-    input_directory = "./instances/ins-1.txt"
+    input_directory = "./instances/ins-5.txt"
     # output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 

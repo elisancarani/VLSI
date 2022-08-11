@@ -2,6 +2,11 @@ import numpy as np
 import random
 from itertools import combinations
 from z3 import *
+import seaborn as sns
+import matplotlib.pyplot as plt
+from IPython.display import display, HTML
+
+
 
 def read_file(in_file):
     f = open(in_file, "r")
@@ -56,6 +61,59 @@ def get_solution(model, solution, w, l, n, maxlen, r=None):
             rot_sol[k] = is_true(model[r[k]])
     print(p_x_sol, p_y_sol, rot_sol, l)
     return p_x_sol, p_y_sol, rot_sol, l
+
+
+def display_solution(p_x_sol, p_y_sol, w, n, x, y, l):
+
+    final_solution = np.empty(len(p_x_sol)*2, dtype=object)
+
+    silicons = np.empty(len(x*2), dtype=object)
+    print("silicons", silicons)
+
+    max_height = np.max(y)
+
+    k=0
+    elem1 = 0
+    for i in p_x_sol:
+        final_solution[k] = i
+        final_solution[k+1] = p_y_sol[elem1]
+        elem1 +=1
+        k=k+2
+    print("final solution", final_solution)
+
+    q=0
+    elem = 0
+    for i in x:
+        silicons[q] = i
+        silicons[q+1] = y[elem]
+        elem += 1
+        q=q+2
+    print("riempito s", silicons)
+
+    print("N", n)
+    print("Y", y)
+    print("l", l)
+    print("max height", max_height)
+    #la matrice è alta come la posizione più alta delle y + l'altezza del rettangolo in quella posizione
+
+    l_f = max_height + l
+    print("l_F", l_f)
+    print("w", w)
+    output_matrix = np.zeros((w, l))
+
+    for i in range(n):
+        base = silicons[2 * i]
+        altezza = silicons[2 * i + 1]
+
+        for j in range(base):
+            for q in range(altezza):
+                output_matrix[final_solution[2 * i] + j, final_solution[2 * i + 1] + q] = i + 1
+
+    print(output_matrix)
+
+    return output_matrix
+
+
 
 """
 def display_nqueens(sol):
