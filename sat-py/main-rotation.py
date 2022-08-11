@@ -85,20 +85,22 @@ def solve_problem(input_directory):
 
     p_x_sol, p_y_sol, rot_sol, l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation)
 
-    size_l = np.max(p_y_sol)
-    print("print  p_y_sol_size_l", size_l)
-    output_matrix = display_solution(p_x_sol, p_y_sol, w, n, x, y, maxlen)
+    #size_l = np.max(p_y_sol)
+    #print("print  p_y_sol_size_l", size_l)
+    output_matrix = display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rot_sol)
 
     #PLOT SOLUTION
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(output_matrix,cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+    #sns.color_palette("Set2")
     plt.show()
-
-    return p_x_sol, p_y_sol, rot_sol, l
+    #cmap="BuPu"
+    #"PiYG"
+    return solver.model(), l
 
 
 def main():
-    input_directory = "./instances/ins-5.txt"
+    input_directory = "./instances/ins-1.txt"
     # output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
