@@ -62,40 +62,71 @@ def solve_problem(input_directory):
                     possible_sols.append(And(silicon))
             solver.add(exactly_one(possible_sols))'''
 
-        for k in range(n):
-            array = np.zeros((n, w, l))
+        '''for k in range(n):
             possible_solutions = []
             for i in range(w - x[k] + 1):
                 for j in range(l - y[k] + 1):
+                    array = np.zeros([n, w, l])
                     false_other_rectangles = []
-                    for ii in range(i, i+x[k]):
-                        for jj in range(j, j+y[k]):
-                            for kk in range(n):
+                    for kk in range(n):
+                        for ii in range(i, i+x[k]):
+                            for jj in range(j, j+y[k]):
                                 if kk != k:
                                     false_other_rectangles.append(Not(solution[ii][jj][kk]))
-                                    print(k, kk, i, j, ii, jj, "firstif")
-                                    array[k, i, j] = 1
+                                    #print(k, kk, i, j, ii, jj, "firstif")
+                                    array[kk, ii, jj] = 1
                                 else:
                                     if i == ii and j == jj:
-                                        false_other_rectangles.append(solution[i][j][k])
-                                        print(k, kk, i, j, ii, jj, "secondtif")
-                                        array[k, i, j] = 2
+                                        false_other_rectangles.append(solution[ii][jj][kk])
+                                        #print(k, kk, i, j, ii, jj, "secondtif")
+                                        array[kk, ii, jj] = 2
                                     else:
-                                        false_other_rectangles.append(Not(solution[ii][jj][k]))
-                                        print(k, kk, i, j, ii, jj, "else")
-                                        array[k, i, j] = 1
+                                        false_other_rectangles.append(Not(solution[ii][jj][kk]))
+                                        #print(k, kk, i, j, ii, jj, "else")
+                                        array[kk, ii, jj] = 1
+                        #print(false_other_rectangles)
                     print(array)
+                    #print(false_other_rectangles)
                     possible_solutions.append(And(false_other_rectangles))
+            #print(possible_solutions)
+            solver.add(exactly_one(possible_solutions))'''
 
+        for k in range(n):
+            possible_solutions = []
+            for i in range(w - x[k] + 1):
+                for j in range(l - y[k] + 1):
+                    array = np.zeros([n, w, l])
+                    false_other_rectangles = []
+                    for kk in range(n):
+                        for ii in range(i+x[k]):
+                            for jj in range(j+y[k]):
+                                if kk != k:
+                                    if ((i-x[kk]<ii<i or j-y[kk]<jj<j) and ii+x[kk]>i and jj+y[kk]>j) or (ii>=i and jj>=j):
+                                        #print(i,j,ii,jj,x[k], y[k], x[kk], y[kk], i-x[kk], ii+x[kk], j-y[kk], jj+y[kk])
+                                        false_other_rectangles.append(Not(solution[ii][jj][kk]))
+                                        # print(k, kk, i, j, ii, jj, "firstif")
+                                        array[kk, ii, jj] = 1
+                                else:
+                                    if i == ii and j == jj:
+                                        false_other_rectangles.append(solution[ii][jj][kk])
+                                        # print(k, kk, i, j, ii, jj, "secondtif")
+                                        array[kk, ii, jj] = 2
+                                    '''else:
+                                        false_other_rectangles.append(Not(solution[ii][jj][kk]))
+                                        # print(k, kk, i, j, ii, jj, "else")
+                                        array[kk, ii, jj] = 1'''
+                        # print(false_other_rectangles)
+                    #print(array)
+                    # print(false_other_rectangles)
+                    possible_solutions.append(And(false_other_rectangles))
+            # print(possible_solutions)
             solver.add(exactly_one(possible_solutions))
-
-
 
 
         if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            print(solver.model())
+            #print(solver.model())
             solved = True
             print(time)
         else:
@@ -115,7 +146,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    input_directory = "./instances/ins-1.txt"
+    input_directory = "./instances/ins-4.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
