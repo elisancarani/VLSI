@@ -11,7 +11,6 @@ def solve_problem(input_directory):
     rotation = [Bool(f"rotation_{k}") for k in range(n)]
 
     #print(x)
-    start = timer()
 
     #takes the index of biggest silicon
     biggest_silicon = 0
@@ -19,13 +18,15 @@ def solve_problem(input_directory):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = sum = 0
+    sum = 0
     for k in range(n):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
 
     solved = False
     while l <= maxlen and solved == False:
+
+        print("Defining constraints ...")
 
         solver = Solver()
 
@@ -147,16 +148,16 @@ def solve_problem(input_directory):
             rotated_silicons_both = And(And(rotation[k], rotation[kk]), And(exactly_one(possible_solutions)))
 
             solver.add(exactly_one([rotated_silicons_first, rotated_silicons_second, rotated_silicons_both, non_rotated_silicons]))
-            #solver.add(exactly_one([non_rotated_silicons, rotated_silicons_first, rotated_silicons_second]))
 
-            #solver.add(And(Not(rotation[1])))
+        print("Checking satisfiability ...")
+        start = timer()
 
         if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
             #print(solver.model())
             solved = True
-            print(time)
+            #print(time)
         else:
             print("Failed to solve with length: ", l)
             l = l + 1

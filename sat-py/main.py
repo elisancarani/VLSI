@@ -9,15 +9,13 @@ def solve_problem(input_directory):
 
     solution = [[[Bool(f"solution_{i}_{j}_{k}") for k in range(n)] for j in range(maxlen)] for i in range(w)]
 
-    start = timer()
-
     #takes the index of biggest silicon
     biggest_silicon = 0
     for k in range(n):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
 
-    l = sum = 0
+    sum = 0
     for k in range(n):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
@@ -26,6 +24,8 @@ def solve_problem(input_directory):
     while l <= maxlen and solved == False:
 
         solver = Solver()
+
+        print("Defining constraints ...")
 
         #every silicon has at most one solution
         for k in range(n):
@@ -92,7 +92,8 @@ def solve_problem(input_directory):
             # print(possible_solutions)
             solver.add(exactly_one(possible_solutions))
 
-
+        print("Checking satisfiability ...")
+        start = timer()
         if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
@@ -116,7 +117,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    input_directory = "./instances/ins-1.txt"
+    input_directory = "./instances/ins-4.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
