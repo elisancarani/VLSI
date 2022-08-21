@@ -80,3 +80,56 @@ def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation):
     print(output_matrix)
 
     return output_matrix
+
+def get_solution(sol_x, sol_y, n, rotation=None):
+    x = []
+    y = []
+    r = []
+    for k in range(n):
+        x.append(round(sol_x[k].varValue))
+        y.append(round(sol_y[k].varValue))
+        if rotation is not None:
+            r.append(round(rotation[k].varValue))
+        else:
+            r.append(False)
+    #print(x, y)
+    return x,y,r
+
+def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation=None):
+
+    final_solution = np.empty(len(p_x_sol)*2, dtype=object)
+
+    silicons = np.empty(len(x)*2, dtype=object)
+
+    k=0
+    elem1 = 0
+    for i in p_x_sol:
+        final_solution[k] = i
+        final_solution[k+1] = p_y_sol[elem1]
+        elem1 +=1
+        k=k+2
+    #print("final solution", final_solution)
+
+    q=0
+    for i in range(n):
+        if rotation[i] == True:
+            silicons[q] = y[i]
+            silicons[q+1] = x[i]
+        else:
+            silicons[q] = x[i]
+            silicons[q+1] = y[i]
+        q = q+2
+
+    output_matrix = np.zeros((w, l))
+
+    for i in range(n):
+        base = silicons[2 * i]
+        altezza = silicons[2 * i + 1]
+
+        for j in range(base):
+            for q in range(altezza):
+                output_matrix[final_solution[2 * i] + j, final_solution[2 * i + 1] + q] = i + 1
+    print(rotation)
+    print(output_matrix)
+
+    return output_matrix

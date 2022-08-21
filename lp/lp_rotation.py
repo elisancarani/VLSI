@@ -25,6 +25,8 @@ def solve_problem(input_directory):
     sol_x = [LpVariable(f"sol_x{i+ 1:02d}", lowBound=0, upBound=w, cat=LpInteger) for i in range(n)]
     sol_y = [LpVariable(f"sol_y{j+ 1:02d}", lowBound=0, upBound=maxlen, cat=LpInteger) for j in range(n)]
 
+    rotation = [LpVariable(f"rotation{i+ 1:02d}", cat=LpBinary) for i in range(n)]
+
     place_x1 = [[LpVariable(f"place_x1{i+ 1:02d}{j+ 1:02d}", cat=LpBinary) for i in range(n)] for j in range(n)]
     place_x2 = [[LpVariable(f"place_x2{i+ 1:02d}{j+ 1:02d}", cat=LpBinary) for i in range(n)] for j in range(n)]
     place_y1 = [[LpVariable(f"place_y1{i+ 1:02d}{j+ 1:02d}", cat=LpBinary) for i in range(n)] for j in range(n)]
@@ -35,22 +37,24 @@ def solve_problem(input_directory):
     problem += l, 'objective function'
 
     for k in range(n):
-        problem += sol_x[k] <= w-x[k]
-        problem += sol_y[k] <= l-y[k]
+        problem += sol_x[k] <= w- (x[k]*(1-rotation[k]) + y[k]*rotation[k])
+        problem += sol_y[k] <= l- (y[k]*(1-rotation[k]) + x[k]*rotation[k])
+
+    #problem += sol_x[k] <= w - (x[k]*(1-rotation[k]) + y[k]*rotation[k])
 
     for k1 in range(n):
         for k2 in range(n):
             if k1 != k2:
-                problem += sol_x[k1] >= sol_x[k2] + x[k2] - w*place_x1[k1][k2] #if x is 0 then it's true
-                problem += sol_x[k1] <= sol_x[k2] - x[k1] + w*place_x2[k1][k2]
-                problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen*place_y1[k1][k2]
-                problem += sol_y[k1] <= sol_y[k2] - y[k1] + maxlen*place_y2[k1][k2]
+                problem += sol_x[k1] >= sol_x[k2] + (x[k2]*(1-rotation[k2]) + y[k2]*rotation[k2]) - w*place_x1[k1][k2] #if x is 0 then it's true
+                problem += sol_x[k1] <= sol_x[k2] - (x[k1]*(1-rotation[k1]) + y[k1]*rotation[k1]) + w*place_x2[k1][k2]
+                problem += sol_y[k1] >= sol_y[k2] + (y[k2]*(1-rotation[k2]) + x[k2]*rotation[k2]) - maxlen*place_y1[k1][k2]
+                problem += sol_y[k1] <= sol_y[k2] - (y[k1]*(1-rotation[k1]) + x[k1]*rotation[k1]) + maxlen*place_y2[k1][k2]
                 problem += 2 <= place_x1[k1][k2] + place_x2[k1][k2] + place_y1[k1][k2] + place_y2[k1][k2] <= 3
 
     problem += sol_y[biggest_silicon] == 0
     problem += sol_x[biggest_silicon] == 0
 
-    solver = CPLEX_CMD(path=path_to_cplex, timelimit = 1000)
+    solver = CPLEX_CMD(path=path_to_cplex)
 
     #start = time.perf_counter()
     start = timer()
@@ -62,7 +66,7 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    p_sol_x, p_sol_y, p_sol_r = get_solution(sol_x, sol_y, n)
+    p_sol_x, p_sol_y, p_sol_r = get_solution(sol_x, sol_y, n, rotation)
     print("final solution: ", p_sol_x, p_sol_y)
 
     '''final_sol_x = []
@@ -83,7 +87,7 @@ def solve_problem(input_directory):
     plt.show()
 
 def main():
-    input_directory = "./instances/ins-31.txt"
+    input_directory = "./instances/ins-40.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
