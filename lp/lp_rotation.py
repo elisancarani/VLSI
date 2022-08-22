@@ -50,7 +50,8 @@ def solve_problem(input_directory):
                 problem += sol_y[k1] >= sol_y[k2] + (y[k2]*(1-rotation[k2]) + x[k2]*rotation[k2]) - maxlen*place_y1[k1][k2]
                 problem += sol_y[k1] <= sol_y[k2] - (y[k1]*(1-rotation[k1]) + x[k1]*rotation[k1]) + maxlen*place_y2[k1][k2]
                 problem += 2 <= place_x1[k1][k2] + place_x2[k1][k2] + place_y1[k1][k2] + place_y2[k1][k2] <= 3
-
+                if k1<k2 and ((x[k1] == x[k2] and y[k1] == y[k2]) or (x[k1] == y[k2] and y[k1] == x[k2])):
+                    problem += sol_x[k1] <= sol_x[k2]  #for some instances it works great, for some it slows everything down a lot
     #biggest silicon in the bottom left corner
     problem += sol_y[biggest_silicon] == 0
     problem += sol_x[biggest_silicon] == 0
@@ -94,7 +95,7 @@ def solve_problem(input_directory):
     plt.show()
 
 def main():
-    input_directory = "./instances/ins-1.txt"
+    input_directory = "./instances/ins-9.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
