@@ -129,7 +129,7 @@ def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation=None):
         for j in range(base):
             for q in range(altezza):
                 output_matrix[final_solution[2 * i] + j, final_solution[2 * i + 1] + q] = i + 1
-    print(rotation)
+    print("rotation: ", rotation)
     print(output_matrix)
 
     return output_matrix
