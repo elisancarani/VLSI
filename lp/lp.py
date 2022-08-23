@@ -34,10 +34,12 @@ def solve_problem(input_directory):
 
     problem += l, 'objective function'
 
+    # no silicon out of the border
     for k in range(n):
         problem += sol_x[k] <= w-x[k]
         problem += sol_y[k] <= l-y[k]
 
+    # no overlap
     for k1 in range(n):
         for k2 in range(n):
             if k1 != k2:
@@ -46,9 +48,11 @@ def solve_problem(input_directory):
                 problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen*place_y1[k1][k2]
                 problem += sol_y[k1] <= sol_y[k2] - y[k1] + maxlen*place_y2[k1][k2]
                 problem += 2 <= place_x1[k1][k2] + place_x2[k1][k2] + place_y1[k1][k2] + place_y2[k1][k2] <= 3
+                # symmetry breaking
                 if x[k1] == x[k2] and y[k1] == y[k2]:
                     problem += sol_x[k1] <= sol_x[k2]
 
+    # biggest silicon in the bottom left corner
     problem += sol_y[biggest_silicon] == 0
     problem += sol_x[biggest_silicon] == 0
 
@@ -102,7 +106,7 @@ def solve_problem(input_directory):
     plt.show()
 
 def main():
-    input_directory = "./instances/ins-0.txt"
+    input_directory = "./instances/ins-15.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
