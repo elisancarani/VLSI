@@ -173,7 +173,6 @@ def solve_all(solve_problem, out_dir):
     '''plot_dir = os.path.join("./plots")
     if not exists(plot_dir):
         os.makedirs(plot_dir)'''
-    out_dir = os.path.join("./out/noRotation")
     if not exists(out_dir):
         os.makedirs(out_dir)
 
