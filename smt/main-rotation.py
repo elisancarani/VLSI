@@ -1,3 +1,5 @@
+from os.path import exists
+
 from z3 import *
 from timeit import default_timer as timer
 from utils import *
@@ -25,6 +27,8 @@ def solve_problem(input_directory):
             biggest_silicon = k
 
     optimizer = Optimize()
+
+    optimizer.set("timeout", 100000)
 
     optimizer.add(And(minlen <= l, l <= maxlen))
 
@@ -60,11 +64,11 @@ def solve_problem(input_directory):
         optimizer.add(l >= l_sum)
 
     # CUMULATIVE Y slows down
-    """for i in range(maxlen):
+    for i in range(maxlen):
        w_sum = 0
        for k in range(n):
            w_sum += If(And(sol_y[k] <= i, i < sol_y[k] + y[k]), x[k], 0)
-       optimizer.add(w >= w_sum)"""
+       optimizer.add(w >= w_sum)
 
     optimizer.add(And(sol_x[biggest_silicon] == 0, sol_y[biggest_silicon] == 0))
 
@@ -86,22 +90,24 @@ def solve_problem(input_directory):
 
         print("length: ", final_l)
         print(final_x, final_y)
-        print(final_dim_x)
         print(final_r)
 
-    output_matrix = display_solution(final_x, final_y, w, n, x_before, y_before, final_l, final_r)
+        '''output_matrix = display_solution(final_x, final_y, w, n, x_before, y_before, final_l, final_r)
 
     # PLOT SOLUTION
-    fig, ax = plt.subplots(figsize=(5, 5))
-    sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+        fig, ax = plt.subplots(figsize=(5, 5))
+        sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
     # sns.color_palette("Set2")
-    plt.show()
-    return optimizer.model(), l
+        plt.show()'''
+        return final_x, final_y, w, n, x, y, final_l, final_r, time
+    else:
+        print("solution not found in time")
+    return None
 
 def main():
-    input_directory = "./instances/ins-2.txt"
-    #output_directory = ".\instances\ins-11.txt" #to define when write file
-    solve_problem(input_directory)
+    #input_directory = "./instances/ins-15.txt"
+    #solve_problem(input_directory)
+    solve_all(solve_problem, "./out/Rotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

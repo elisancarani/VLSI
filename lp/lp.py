@@ -49,7 +49,7 @@ def solve_problem(input_directory):
                 problem += sol_y[k1] <= sol_y[k2] - y[k1] + maxlen*place_y2[k1][k2]
                 problem += 2 <= place_x1[k1][k2] + place_x2[k1][k2] + place_y1[k1][k2] + place_y2[k1][k2] <= 3
                 # symmetry breaking
-                if x[k1] == x[k2] and y[k1] == y[k2]:
+                if k1<k2 and x[k1] == x[k2] and y[k1] == y[k2]:
                     problem += sol_x[k1] <= sol_x[k2]
 
     # biggest silicon in the bottom left corner
@@ -73,6 +73,7 @@ def solve_problem(input_directory):
                 # problem += sol_x
 
     solver = CPLEX_CMD(path=path_to_cplex, timelimit = 100)
+
     #solver = GUROBI()
 
     #start = time.perf_counter()
@@ -85,30 +86,28 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    p_sol_x, p_sol_y, p_sol_r = get_solution(sol_x, sol_y, n)
-    print("final solution: ", p_sol_x, p_sol_y)
+    if l.varValue is not None:
+        final_x, final_y, final_r = get_solution(sol_x, sol_y, n)
+        print("final solution: ", final_x, final_y)
 
-    '''final_sol_x = []
-    final_sol_y = []
-    #print(l.varValue)
-    for k in range(n):
-        final_sol_x.append(sol_x[k].varValue)
-        final_sol_y.append(sol_y[k].varValue)
+        '''output_matrix = display_solution(final_x, final_y, w, n, x, y, round(l.varValue), final_r)
+    
+        # PLOT SOLUTION
+        fig, ax = plt.subplots(figsize=(5, 5))
+        sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+        # sns.color_palette("Set2")
+        plt.show()'''
+        return final_x, final_y, w, n, x, y, l.varValue, final_r, elapsed
+    else:
+        return None
 
-    print(final_sol_x, final_sol_y)'''
 
-    output_matrix = display_solution(p_sol_x, p_sol_y, w, n, x, y, round(l.varValue), p_sol_r)
-
-    # PLOT SOLUTION
-    fig, ax = plt.subplots(figsize=(5, 5))
-    sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
-    # sns.color_palette("Set2")
-    plt.show()
 
 def main():
-    input_directory = "./instances/ins-15.txt"
-    #output_directory = ".\instances\ins-11.txt" #to define when write file
-    solve_problem(input_directory)
+    #input_directory = "./instances/ins-15.txt"
+    #solve_problem(input_directory)
+    solve_all(solve_problem, "./out/noRotation")
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
