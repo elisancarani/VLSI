@@ -42,7 +42,7 @@ def get_solution(model, sol_x, sol_y, l, n, rotation=None):
     #print(x, y)
     return x,y,l,r
 
-def get_dimentions(model, dimx, dimy, n, rotation):
+def get_dimensions(model, dimx, dimy, n, rotation):
     x = []
     y = []
     for k in range(n):

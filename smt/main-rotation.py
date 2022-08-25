@@ -82,7 +82,7 @@ def solve_problem(input_directory):
         print("total time: ", time)
         model = optimizer.model()
         final_x, final_y, final_l, final_r = get_solution(model, sol_x, sol_y, l, n, rotation)
-        final_dim_x, final_dim_y = get_dimentions(model, x, y, n, final_r)
+        #final_dim_x, final_dim_y = get_dimensions(model, x, y, n, final_r)
 
         print("length: ", final_l)
         print(final_x, final_y)
