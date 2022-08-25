@@ -67,12 +67,12 @@ def solve_problem(input_directory):
                     #problem += sol_x[k1] >= sol_x[k2] + x[k2] - w*(1-place1[k1][k2])
                     #problem += sol_x
             if x[k1] + x[k2] >= w + 1:
-                print("ciao")
                 problem += sol_y[k1] <= sol_y[k2] + maxlen * place1[k1][k2]
                 problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen * (1 - place1[k1][k2])
                 # problem += sol_x
 
-    solver = CPLEX_CMD(path=path_to_cplex, timelimit = 100)
+    timeout = 100
+    solver = CPLEX_CMD(path=path_to_cplex, timelimit = timeout)
 
     #solver = GUROBI()
 
@@ -86,7 +86,7 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    if l.varValue is not None:
+    if elapsed < timeout:
         final_x, final_y, final_r = get_solution(sol_x, sol_y, n)
         print("final solution: ", final_x, final_y)
 
@@ -104,7 +104,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    #input_directory = "./instances/ins-15.txt"
+    #input_directory = "./instances/ins-40.txt"
     #solve_problem(input_directory)
     solve_all(solve_problem, "./out/noRotation")
 
