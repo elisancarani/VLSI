@@ -34,13 +34,25 @@ def get_solution(model, sol_x, sol_y, l, n, rotation=None):
         x.append(model[sol_x[k]].as_long())
         y.append(model[sol_y[k]].as_long())
         if rotation is not None:
-            r.append(model[rotation[k]].as_long())
+            r.append(model[rotation[k]])
         else:
             r.append(False)
     l = model[l].as_long()
     print("tipoooo", type(l))
     #print(x, y)
     return x,y,l,r
+
+def get_dimentions(model, dimx, dimy, n, rotation):
+    x = []
+    y = []
+    for k in range(n):
+        if rotation[k] == False:
+            x.append(model[dimx[k]].as_long())
+            y.append(model[dimy[k]].as_long())
+        else:
+            x.append(model[dimx[k]].as_long())
+            y.append(model[dimy[k]].as_long())
+    return x,y
 
 
 def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation):

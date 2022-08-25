@@ -15,14 +15,14 @@ def solve_problem(input_directory):
         sum += x[k] * y[k]
     minlen = math.floor(sum / w)
 
-    optimizer = Optimize()
-
-    optimizer.add(And(minlen <= l, l <= maxlen)) #slows time
-
     biggest_silicon = 0
     for k in range(n):
         if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
             biggest_silicon = k
+
+    optimizer = Optimize()
+
+    optimizer.add(And(minlen <= l, l <= maxlen))
 
     #making sure the silicons don't spill out of the box
     for k in range(n):
@@ -89,7 +89,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    input_directory = "./instances/ins-0.txt"
+    input_directory = "./instances/ins-18.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
