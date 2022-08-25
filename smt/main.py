@@ -10,8 +10,19 @@ def solve_problem(input_directory):
     sol_y = [Int(f"sol_y{i}") for i in range(n)]
     l = Int("l")
 
+    sum = 0
+    for k in range(n):
+        sum += x[k] * y[k]
+    minlen = math.floor(sum / w)
+
     optimizer = Optimize()
 
+    optimizer.add(And(minlen <= l, l <= maxlen)) #slows time
+
+    biggest_silicon = 0
+    for k in range(n):
+        if x[biggest_silicon] * y[biggest_silicon] < x[k] * y[k]:
+            biggest_silicon = k
 
     #making sure the silicons don't spill out of the box
     for k in range(n):
@@ -30,6 +41,29 @@ def solve_problem(input_directory):
                                  sol_x[k1] <= sol_x[k2] - x[k1],
                                  sol_y[k1] >= sol_y[k2] + y[k2],
                                  sol_y[k1] <= sol_y[k2] - y[k1]))
+
+    #CUMULATIVE X
+    # REF: https://glossary.informs.org/ver2/mpgwiki/index.php?title=Cumulative_constraint
+    for i in range(w):
+        l_sum = 0
+        for k in range(n):
+            l_sum += If(And(sol_x[k] <= i, i < sol_x[k] + x[k]), y[k], 0)
+        optimizer.add(l >= l_sum)
+
+    # CUMULATIVE Y slows down
+    """for i in range(maxlen):
+       w_sum = 0
+       for k in range(n):
+           w_sum += If(And(sol_y[k] <= i, i < sol_y[k] + y[k]), x[k], 0)
+       optimizer.add(w >= w_sum)"""
+
+    optimizer.add(And(sol_x[biggest_silicon] == 0, sol_y[biggest_silicon] == 0))
+
+    #Symmetry breaking
+    for k1 in range(n):
+        for k2 in range(n):
+            if k1 < k2 and x[k1] == x[k2] and y[k1] == y[k2]:
+                optimizer.add(Or(sol_x[k1] < sol_x[k2], And(sol_x[k1] == sol_x[k2], sol_y[k1] <= sol_y[k2])))
 
     optimizer.minimize(l)
 
@@ -53,12 +87,9 @@ def solve_problem(input_directory):
     plt.show()
     return optimizer.model(), l
 
-    #TODO
-    #symmetry breaking and cumulative
-
 
 def main():
-    input_directory = "./instances/ins-15.txt"
+    input_directory = "./instances/ins-0.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     solve_problem(input_directory)
 
