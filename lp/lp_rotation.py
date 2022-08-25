@@ -65,7 +65,7 @@ def solve_problem(input_directory):
             problem += rotation[k] <= 0
 
 
-    solver = CPLEX_CMD(path=path_to_cplex)
+    solver = CPLEX_CMD(path=path_to_cplex, timelimit = 100)
 
     #start = time.perf_counter()
     start = timer()
@@ -77,30 +77,25 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    p_sol_x, p_sol_y, p_sol_r = get_solution(sol_x, sol_y, n, rotation)
-    print("final solution: ", p_sol_x, p_sol_y)
+    final_x, final_y, final_r = get_solution(sol_x, sol_y, n)
+    print("final solution: ", final_x, final_y)
 
-    '''final_sol_x = []
-    final_sol_y = []
-    #print(l.varValue)
-    for k in range(n):
-        final_sol_x.append(sol_x[k].varValue)
-        final_sol_y.append(sol_y[k].varValue)
-
-    print(final_sol_x, final_sol_y)'''
-
-    output_matrix = display_solution(p_sol_x, p_sol_y, w, n, x, y, round(l.varValue), p_sol_r)
+    '''output_matrix = display_solution(final_x, final_y, w, n, x, y, round(l.varValue), final_r)
 
     # PLOT SOLUTION
     fig, ax = plt.subplots(figsize=(5, 5))
     sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
     # sns.color_palette("Set2")
-    plt.show()
+    plt.show()'''
+    if l is None:
+        return None
+    else:
+        return final_x, final_y, w, n, x, y, l.varValue, final_r, elapsed
 
 def main():
-    input_directory = "./instances/ins-3.txt"
-    #output_directory = ".\instances\ins-11.txt" #to define when write file
-    solve_problem(input_directory)
+    #input_directory = "./instances/ins-1.txt"
+    #solve_problem(input_directory)
+    solve_all(solve_problem, "./out/Rotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

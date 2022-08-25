@@ -149,6 +149,8 @@ def solve_problem(input_directory):
 
             solver.add(exactly_one([rotated_silicons_first, rotated_silicons_second, rotated_silicons_both, non_rotated_silicons]))
 
+        solver.set("timeout", 100000)
+
         print("Checking satisfiability ...")
         start = timer()
 
@@ -162,22 +164,23 @@ def solve_problem(input_directory):
             print("Failed to solve with length: ", l)
             l = l + 1
 
-    p_x_sol, p_y_sol, rot_sol, l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation)
-
-    output_matrix = display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rot_sol)
-
-    # PLOT SOLUTION
-    fig, ax = plt.subplots(figsize=(5, 5))
-    sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
-    # sns.color_palette("Set2")
-    plt.show()
-    return solver.model(), l
+    if l <= maxlen:
+        final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen)
+        '''output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
+            # PLOT SOLUTION
+            fig, ax = plt.subplots(figsize=(5, 5))
+            sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+            # sns.color_palette("Set2")
+            plt.show()'''
+        return final_x, final_y, w, n, x, y, final_l, final_r, time
+    else:
+        return None
 
 
 def main():
-    input_directory = "./instances/ins-4.txt"
+    input_directory = "./instances/ins-1.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
-    solve_problem(input_directory)
+    solve_problem(input_directory, "./out/Rotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

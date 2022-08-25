@@ -1,3 +1,4 @@
+from os.path import *
 from z3 import *
 from timeit import default_timer as timer
 from utils import *
@@ -21,6 +22,8 @@ def solve_problem(input_directory):
             biggest_silicon = k
 
     optimizer = Optimize()
+
+    optimizer.set("timeout", 100000)
 
     optimizer.add(And(minlen <= l, l <= maxlen))
 
@@ -78,20 +81,27 @@ def solve_problem(input_directory):
         print(final_x, final_y)
         print(final_r)
 
-    output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
+        '''output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
 
-    # PLOT SOLUTION
-    fig, ax = plt.subplots(figsize=(5, 5))
-    sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
-    # sns.color_palette("Set2")
-    plt.show()
-    return optimizer.model(), l
+            # PLOT SOLUTION
+            fig, ax = plt.subplots(figsize=(5, 5))
+            sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+            # sns.color_palette("Set2")
+            plt.show()'''
+
+        return final_x, final_y, w, n, x, y, final_l, final_r, time
+    else:
+        print("solution not found in time")
+        return None
 
 
 def main():
-    input_directory = "./instances/ins-18.txt"
-    #output_directory = ".\instances\ins-11.txt" #to define when write file
-    solve_problem(input_directory)
+    #input_directory = "./instances/ins-18.txt"
+    #final_x, final_y, w, n, x, y, final_l, final_r = solve_problem(input_directory)
+    solve_all(solve_problem, "./out/noRotation")
+
+
+
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':

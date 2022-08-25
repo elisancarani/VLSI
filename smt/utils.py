@@ -1,3 +1,4 @@
+from os.path import exists
 import numpy as np
 import random
 from itertools import combinations
@@ -25,6 +26,36 @@ def read_file(in_file):
 
     return w, n, x, y, maxlen
 
+def write_file(file, final_x, final_y, w, n, x, y, l, r, time):
+    f = open(file, 'w')
+    f.write(f"input data: {n} {w}\n")
+    f.write(f"[")
+    for k in range(n):
+        f.write(f"{x[k]} ")
+    f.write(f"]\t")
+    f.write(f"[")
+    for k in range(n):
+        f.write(f"{y[k]} ")
+    f.write(f"]\n")
+
+    f.write(f"solution: {l}\n")
+
+    f.write(f"[")
+    for k in range(n):
+        f.write(f"{final_x[k]} ")
+    f.write(f"]\t")
+    f.write(f"[")
+    for k in range(n):
+        f.write(f"{final_y[k]} ")
+    f.write(f"]\n")
+    f.write(f"[")
+    for k in range(n):
+        f.write(f"{r[k] }")
+    f.write(f"]")
+
+    f.write(f"\ntime: {time}\n")
+
+    return
 
 def get_solution(model, sol_x, sol_y, l, n, rotation=None):
     x = []
@@ -38,11 +69,10 @@ def get_solution(model, sol_x, sol_y, l, n, rotation=None):
         else:
             r.append(False)
     l = model[l].as_long()
-    print("tipoooo", type(l))
     #print(x, y)
     return x,y,l,r
 
-def get_dimentions(model, dimx, dimy, n, rotation):
+'''def get_dimensions(model, dimx, dimy, n, rotation):
     x = []
     y = []
     for k in range(n):
@@ -50,9 +80,9 @@ def get_dimentions(model, dimx, dimy, n, rotation):
             x.append(model[dimx[k]].as_long())
             y.append(model[dimy[k]].as_long())
         else:
-            x.append(model[dimx[k]].as_long())
-            y.append(model[dimy[k]].as_long())
-    return x,y
+            x.append(model[dimy[k]].as_long())
+            y.append(model[dimx[k]].as_long())
+    return x,y'''
 
 
 def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation):
@@ -90,6 +120,41 @@ def display_solution(p_x_sol, p_y_sol, w, n, x, y, l, rotation):
     print(output_matrix)
 
     return output_matrix
+
+def solve_all(solve_problem, out_dir):
+    input_dir = "./instances"
+    '''plot_dir = os.path.join("./plots")
+    if not exists(plot_dir):
+        os.makedirs(plot_dir)'''
+    out_dir = os.path.join("./out/noRotation")
+    if not exists(out_dir):
+        os.makedirs(out_dir)
+
+    for file in sorted(os.listdir(input_dir)):
+        name = file.split(os.sep)[-1].split('.')[0]
+        out_name = name.lower().replace("ins", "out")
+
+        # instance = read_file(os.path.join(input_dir, file))
+        print(f"Solving instance {name}")
+
+        sol = solve_problem(os.path.join(input_dir, file))
+        if sol is not None:
+            '''plot_file = os.path.join(plot_dir, out_name + '.png')
+            output_matrix = display_solution(final_x, final_y, w, n, x, y, l, r)
+            # PLOT SOLUTION
+            #fig, ax = plt.subplots(figsize=(5, 5))
+            fig = go.Figure()
+            sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
+            # sns.color_palette("Set2")
+            #plt.show()
+            fig.write_image(plot_file, width=1200, height=1200)'''
+
+            write_file(os.path.join(out_dir, out_name + ".txt"), sol[0], sol[1], sol[2], sol[3], sol[4], sol[5],
+                       sol[6],
+                       sol[7], sol[8])
+            print("Solution to instance ", file, "found in time", sol[8])
+        else:
+            print("Solution not found in time")
 
 
 """
