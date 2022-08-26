@@ -28,7 +28,7 @@ def solve_problem(input_directory):
 
     optimizer = Optimize()
 
-    optimizer.set("timeout", 100000)
+    optimizer.set("timeout", 500000)
 
     optimizer.add(And(minlen <= l, l <= maxlen))
 
@@ -73,9 +73,13 @@ def solve_problem(input_directory):
     optimizer.add(And(sol_x[biggest_silicon] == 0, sol_y[biggest_silicon] == 0))
 
     #Symmetry breaking
-    for k1 in range(n):
+    '''for k1 in range(n):
         for k2 in range(n):
             if k1 < k2 and x[k1] == x[k2] and y[k1] == y[k2]:
+                optimizer.add(Or(sol_x[k1] < sol_x[k2], And(sol_x[k1] == sol_x[k2], sol_y[k1] <= sol_y[k2])))'''
+    for k1 in range(n):
+        for k2 in range(n):
+            if k1 < k2 and ((x[k1] == x[k2] and y[k1] == y[k2]) or (x[k1] == y[k2] and y[k1] == x[k2])):  #changed because of rotation
                 optimizer.add(Or(sol_x[k1] < sol_x[k2], And(sol_x[k1] == sol_x[k2], sol_y[k1] <= sol_y[k2])))
 
     optimizer.minimize(l)

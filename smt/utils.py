@@ -28,29 +28,44 @@ def read_file(in_file):
 
 def write_file(file, final_x, final_y, w, n, x, y, l, r, time):
     f = open(file, 'w')
-    f.write(f"input data: {n} {w}\n")
+    f.write(f"n, w: {n} {w}\n")
     f.write(f"[")
     for k in range(n):
-        f.write(f"{x[k]} ")
+        if k == n-1:
+            f.write(f"{x[k]}")
+        else:
+            f.write(f"{x[k]}, ")
     f.write(f"]\t")
     f.write(f"[")
     for k in range(n):
-        f.write(f"{y[k]} ")
+        if k == n - 1:
+            f.write(f"{y[k]}")
+        else:
+            f.write(f"{y[k]}, ")
     f.write(f"]\n")
 
     f.write(f"solution: {l}\n")
 
     f.write(f"[")
     for k in range(n):
-        f.write(f"{final_x[k]} ")
+        if k == n - 1:
+            f.write(f"{final_x[k]}")
+        else:
+            f.write(f"{final_x[k]}, ")
     f.write(f"]\t")
     f.write(f"[")
     for k in range(n):
-        f.write(f"{final_y[k]} ")
+        if k == n - 1:
+            f.write(f"{final_y[k]}")
+        else:
+            f.write(f"{final_y[k]}, ")
     f.write(f"]\n")
     f.write(f"[")
     for k in range(n):
-        f.write(f"{r[k] }")
+        if k == n - 1:
+            f.write(f"{r[k]}")
+        else:
+            f.write(f"{r[k]}, ")
     f.write(f"]")
 
     f.write(f"\ntime: {time}\n")
