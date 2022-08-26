@@ -23,7 +23,7 @@ def solve_problem(input_directory):
 
     optimizer = Optimize()
 
-    optimizer.set("timeout", 100000)
+    optimizer.set("timeout", 500000)
 
     optimizer.add(And(minlen <= l, l <= maxlen))
 

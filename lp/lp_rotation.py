@@ -78,7 +78,7 @@ def solve_problem(input_directory):
     print("l:", l.varValue)
 
     if elapsed < timeout:
-        final_x, final_y, final_r = get_solution(sol_x, sol_y, n)
+        final_x, final_y, final_r = get_solution(sol_x, sol_y, n, rotation)
         print("final solution: ", final_x, final_y)
 
         '''output_matrix = display_solution(final_x, final_y, w, n, x, y, round(l.varValue), final_r)
