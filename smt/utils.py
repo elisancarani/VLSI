@@ -66,6 +66,7 @@ def write_file(file, final_x, final_y, w, n, x, y, l, r, time):
             f.write(f"{r[k]}")
         else:
             f.write(f"{r[k]}, ")
+
     f.write(f"]")
 
     f.write(f"\ntime: {time}\n")
