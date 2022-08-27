@@ -91,7 +91,7 @@ def solve_problem(input_directory):
             # print(possible_solutions)
             solver.add(exactly_one(possible_solutions))
 
-        solver.set("timeout", 200000)
+        solver.set("timeout", 300000)
 
         print("Checking satisfiability ...")
         start = timer()

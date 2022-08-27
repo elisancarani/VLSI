@@ -65,7 +65,6 @@ def write_file(file, final_x, final_y, w, n, x, y, l, r, time):
             f.write(f"{r[k]}")
         else:
             f.write(f"{r[k]}, ")
-
     f.write(f"]")
 
     f.write(f"\ntime: {time}\n")
@@ -197,9 +196,7 @@ def solve_all(solve_problem, out_dir):
             #plt.show()
             fig.write_image(plot_file, width=1200, height=1200)'''
 
-            write_file(os.path.join(out_dir, out_name + ".txt"), sol[0], sol[1], sol[2], sol[3], sol[4], sol[5],
-                       sol[6],
-                       sol[7], sol[8])
+            write_file(os.path.join(out_dir, out_name + ".txt"), sol[0], sol[1], sol[2], sol[3], sol[4], sol[5],sol[6],sol[7], sol[8])
             print("Solution to instance ", file, "found in time", sol[8])
         else:
             print("Solution not found in time")

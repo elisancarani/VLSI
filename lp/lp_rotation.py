@@ -76,7 +76,7 @@ def solve_problem(input_directory):
                     problem += sol_y[k1] <= sol_y[k2] + maxlen * place1[k1][k2]
                     problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen * (1 - place1[k1][k2])'''
 
-    timeout = 100
+    timeout = 300
     solver = CPLEX_CMD(path=path_to_cplex, timelimit = timeout)
 
     #start = time.perf_counter()

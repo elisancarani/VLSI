@@ -28,7 +28,7 @@ def solve_problem(input_directory):
 
     optimizer = Optimize()
 
-    optimizer.set("timeout", 500000)
+    optimizer.set("timeout", 300000)
 
     optimizer.add(And(minlen <= l, l <= maxlen))
 
@@ -103,7 +103,7 @@ def solve_problem(input_directory):
         sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
     # sns.color_palette("Set2")
         plt.show()'''
-        return final_x, final_y, w, n, x, y, final_l, final_r, time
+        return final_x, final_y, w, n, x_before, y_before, final_l, final_r, time
     else:
         print("solution not found in time")
     return None
