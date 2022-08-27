@@ -149,7 +149,7 @@ def solve_problem(input_directory):
 
             solver.add(exactly_one([rotated_silicons_first, rotated_silicons_second, rotated_silicons_both, non_rotated_silicons]))
 
-        solver.set("timeout", 100000)
+        solver.set("timeout", 300000)
 
         print("Checking satisfiability ...")
         start = timer()

@@ -107,7 +107,7 @@ def solve_all(rotation):
 
 
         start_time = timer()
-        result = inst.solve(timeout=timedelta(seconds=500), free_search=True)
+        result = inst.solve(timeout=timedelta(seconds=300), free_search=True)
         time = timer() - start_time
 
         if result.status is Status.OPTIMAL_SOLUTION:
