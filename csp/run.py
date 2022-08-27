@@ -1,5 +1,9 @@
 import os
+from datetime import timedelta
 from os.path import exists
+from minizinc import Model, Solver, Instance, Status
+from timeit import default_timer as timer
+
 
 def read_file(in_file):
     f = open(in_file, "r")
@@ -68,28 +72,65 @@ def write_file(file, final_x, final_y, w, n, x, y, l, r, time):
 
 def solve_all(rotation):
     if rotation == False:
-        model = "./csp"
+        model_name = "./csp.mzn"
         out_dir = "./out/noRotation"
     else:
-        model = "./cps-rotation"
+        model_name = "./csp-rotation.mzn"
         out_dir = "./out/Rotation"
-    input_dir = "./instances/instancesdzn"
+    input_dir = "./instances"
     '''plot_dir = os.path.join("./plots")
     if not exists(plot_dir):
         os.makedirs(plot_dir)'''
     if not exists(out_dir):
         os.makedirs(out_dir)
 
-    input_files = ["ins-1.dzn", "ins-2.dzn", "ins-10.dzn"]
-
-    for file in input_files:
+    for file in sorted(os.listdir(input_dir)):
         name = file.split(os.sep)[-1].split('.')[0]
-        out_name = name.lower().replace("ins", "out")
+        out_name = name.lower().replace("ins", "out").replace('.dzn', '.txt')
 
         # instance = read_file(os.path.join(input_dir, file))
         print(f"Solving instance {name}")
 
-        os.system(f"minizinc --solver Chuffed -f --solver-time-limit 500000 --all-solutions --output-time {model} {os.path.join(input_dir, file)} --output-to-file {out_dir}")
+        w, n, x, y, maxlen = read_file(os.path.join(input_dir, file))
+        silicons = []
+        for i in range(n):
+            silicons.append(x[i])
+            silicons.append(y[i])
+
+        model = Model(model_name)
+        solver = Solver.lookup("gecode")
+
+        inst = Instance(solver, model)
+        inst["w"] = w
+        inst["n"] = n
+        inst["silicons"] = silicons
+
+
+        start_time = timer()
+        result = inst.solve(timeout=timedelta(seconds=500), free_search=True)
+        time = timer() - start_time
+
+        if result.status is Status.OPTIMAL_SOLUTION:
+            final_sol = result.solution.solution
+            l = result.solution.l
+            if rotation:
+                r = result.solution.rotation
+            else:
+                r = []
+                for k in range(n):
+                    r.append("False")
+
+            final_x = []
+            final_y = []
+            for k in range(n):
+                final_x.append(final_sol[k][0])
+                final_y.append(final_sol[k][1])
+
+            print(final_x, final_y, w, n, x, y, l, r, time)
+
+            write_file(os.path.join(out_dir, out_name + ".txt"), final_x, final_y, w, n, x, y, l, r, time)
+        else:
+            print("not found")
         '''if sol is not None:
             write_file(os.path.join(out_dir, out_name + ".txt"), sol[0], sol[1], sol[2], sol[3], sol[4], sol[5],
                        sol[6],
@@ -103,7 +144,7 @@ def main():
     #input_directory = "./instances/ins-1.txt"
     #output_directory = ".\instances\ins-11.txt" #to define when write file
     #solve_problem(input_directory)
-    rotation = False
+    rotation = True
     solve_all(rotation)
 
 # Press the green button in the gutter to run the script.
