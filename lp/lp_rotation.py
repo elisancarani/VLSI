@@ -64,6 +64,18 @@ def solve_problem(input_directory):
         if x[k] == y[k]:
             problem += rotation[k] <= 0
 
+    place1 = [[LpVariable(f"place{i + 1:02d}{j + 1:02d}", cat=LpBinary) for i in range(n)] for j in range(n)]
+    # CUMULATIVE CONSTRAINT
+    '''for k1 in range(n):
+        for k2 in range(n):
+            if k1<k2:
+                # if y[k1] + y[k2] >= l+1:
+                # problem += sol_x[k1] <= sol_x[k2] + w*place1[k1][k2]
+                # problem += sol_x[k1] >= sol_x[k2] + x[k2] - w*(1-place1[k1][k2])
+                if x[k1] + x[k2] >= w + 1:
+                    problem += sol_y[k1] <= sol_y[k2] + maxlen * place1[k1][k2]
+                    problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen * (1 - place1[k1][k2])'''
+
     timeout = 100
     solver = CPLEX_CMD(path=path_to_cplex, timelimit = timeout)
 
