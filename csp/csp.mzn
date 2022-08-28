@@ -18,7 +18,6 @@ int: minlen = (sum(i in N)(silicons[i,2]*silicons[i,1]))div w;
 
 var minlen..maxlen : l; 
 
-int : minsize = min(s in N, i in 1..2)(silicons[s, i]);
 array [N, 1..2] of var 0..maxlen: solution;
 
 %get an array of the indexes ordered by height of the rectangle, because the taller the silicon, the more important the placement 
