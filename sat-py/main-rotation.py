@@ -23,12 +23,14 @@ def solve_problem(input_directory):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
 
+    solver = Solver()
+
     solved = False
     while l <= maxlen and solved == False:
 
         print("Defining constraints ...")
 
-        solver = Solver()
+        solver.reset()
 
         #every silicon has at most one solution
         for k in range(n):

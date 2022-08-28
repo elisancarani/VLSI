@@ -19,10 +19,12 @@ def solve_problem(input_directory):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
 
+    solver = Solver()
+
     solved = False
     while l <= maxlen and solved == False:
 
-        solver = Solver()
+        solver.reset()
 
         print("Defining constraints ...")
 
@@ -91,7 +93,7 @@ def solve_problem(input_directory):
             # print(possible_solutions)
             solver.add(exactly_one(possible_solutions))
 
-        solver.set("timeout", 300000)
+        solver.set("timeout", 300000) #300000
 
         print("Checking satisfiability ...")
         start = timer()
@@ -120,8 +122,7 @@ def solve_problem(input_directory):
 
 
 def main():
-    #input_directory = "./instances/ins-1.txt"
-    #output_directory = ".\instances\ins-11.txt" #to define when write file
+    #input_directory = "./instances/ins-10.txt"
     #solve_problem(input_directory)
     solve_all(solve_problem, "./out/noRotation")
 

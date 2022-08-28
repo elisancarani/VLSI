@@ -84,7 +84,7 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    if elapsed < timeout:
+    if problem.status == 1:
         final_x, final_y, final_r = get_solution(sol_x, sol_y, n)
         print("final solution: ", final_x, final_y)
 
