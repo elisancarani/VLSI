@@ -1,0 +1,6 @@
+n, w: 19 31
+[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 12]	[3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 22, 31, 3, 7, 8, 13, 31]
+solution: 31
+[3, 24, 24, 6, 3, 9, 9, 3, 3, 6, 6, 9, 24, 0, 27, 27, 27, 27, 12]	[18, 27, 0, 0, 0, 0, 22, 21, 7, 6, 18, 8, 5, 0, 20, 0, 23, 7, 0]
+[False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
+time: 1.262062300000025
