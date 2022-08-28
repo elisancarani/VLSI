@@ -89,25 +89,26 @@ def solve_problem(input_directory):
 
     print("l:", l.varValue)
 
-    if elapsed < timeout:
+    if problem.status == 1:
         final_x, final_y, final_r = get_solution(sol_x, sol_y, n, rotation)
         print("final solution: ", final_x, final_y)
 
-        '''output_matrix = display_solution(final_x, final_y, w, n, x, y, round(l.varValue), final_r)
+        output_matrix = display_solution(final_x, final_y, w, n, x, y, round(l.varValue), final_r)
 
         # PLOT SOLUTION
         fig, ax = plt.subplots(figsize=(5, 5))
         sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
         # sns.color_palette("Set2")
-        plt.show()'''
+        plt.show()
         return final_x, final_y, w, n, x, y, l.varValue, final_r, elapsed
     else:
+        print("no solution")
         return None
 
 def main():
-    #input_directory = "./instances/ins-1.txt"
-    #solve_problem(input_directory)
-    solve_all(solve_problem, "./out/Rotation")
+    input_directory = "./instances/ins-36.txt"
+    solve_problem(input_directory)
+    #solve_all(solve_problem, "./out/Rotationprova")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
