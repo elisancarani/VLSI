@@ -1,0 +1,6 @@
+n, w: 14 19
+[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4]	[3, 4, 5, 6, 7, 8, 9, 10, 11, 13, 19, 5, 6, 8]
+solution: 19
+[16, 0, 0, 13, 16, 7, 16, 0, 7, 13, 10, 3, 3, 3]	[0, 0, 14, 0, 12, 0, 3, 4, 8, 6, 0, 14, 8, 0]
+[False, False, False, False, False, False, False, False, False, False, False, False, False, False]
+time: 0.4544010000000003

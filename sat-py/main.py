@@ -19,12 +19,13 @@ def solve_problem(input_directory):
         sum += x[k] * y[k]
     l = math.floor(sum / w)
 
-    solver = Solver()
+    timeout = 300
+    elapsed = 0
 
     solved = False
     while l <= maxlen and solved == False:
 
-        solver.reset()
+        solver = Solver()
 
         print("Defining constraints ...")
 
@@ -93,31 +94,45 @@ def solve_problem(input_directory):
             # print(possible_solutions)
             solver.add(exactly_one(possible_solutions))
 
-        solver.set("timeout", 300000) #300000
+        solver.set("timeout", timeout * 1000) #300000
 
         print("Checking satisfiability ...")
         start = timer()
         if solver.check() == sat:
             time = timer() - start
             print("model solved with length:", l, "in time: ", time, "s")
-            #print(solver.model())
+            # print(solver.model())
+            timeout = timeout - time
+            print("timeout:", timeout)
+            elapsed = elapsed + time
+            print("elapsed:", elapsed)
+
             solved = True
-            print(time)
+            final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen)
+            return final_x, final_y, w, n, x, y, final_l, final_r, elapsed
+            # print(time)
         else:
+            time = timer() - start
+            timeout = timeout - time
+            print("timeout:", timeout)
+            elapsed = elapsed + time
+            print("elapsed:", elapsed)
             print("Failed to solve with length: ", l)
             l = l + 1
+            if elapsed >= timeout:
+                return None
 
-    if l <= maxlen:
+    '''if l <= maxlen:
         final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen)
-        '''output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
+        output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
             # PLOT SOLUTION
             fig, ax = plt.subplots(figsize=(5, 5))
             sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
             # sns.color_palette("Set2")
-            plt.show()'''
-        return final_x, final_y, w, n, x, y, final_l, final_r, time
+            plt.show()
+        return final_x, final_y, w, n, x, y, final_l, final_r, elapsed
     else:
-        return None
+        return None'''
 
 
 

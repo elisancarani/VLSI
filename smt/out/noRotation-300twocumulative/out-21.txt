@@ -1,0 +1,6 @@
+n, w: 22 28
+[3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 5, 5, 5]	[3, 4, 5, 6, 7, 8, 9, 10, 11, 16, 17, 21, 23, 3, 4, 5, 8, 13, 23, 6, 9, 13]
+solution: 28
+[22, 11, 4, 22, 19, 7, 22, 22, 25, 11, 25, 19, 4, 7, 7, 0, 10, 7, 0, 14, 14, 14]	[0, 0, 0, 12, 0, 4, 3, 18, 17, 12, 0, 7, 5, 25, 0, 23, 4, 12, 0, 0, 6, 15]
+[False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False, False]
+time: 178.22716220000007
