@@ -76,7 +76,8 @@ def solve_problem(input_directory):
                         for ii in range(i+x[k]):
                             for jj in range(j+y[k]):
                                 if kk != k:
-                                    if ((i-x[kk]<ii<i or j-y[kk]<jj<j) and ii+x[kk]>i and jj+y[kk]>j) or (ii>=i and jj>=j):
+                                    #if ((i-x[kk]<ii<i or j-y[kk]<jj<j) and ii+x[kk]>i and jj+y[kk]>j) or (ii>=i and jj>=j):
+                                    if (ii + x[kk] > i and jj + y[kk] > j):
                                         #print(i,j,ii,jj,x[k], y[k], x[kk], y[kk], i-x[kk], ii+x[kk], j-y[kk], jj+y[kk])
                                         false_other_rectangles.append(Not(solution[ii][jj][kk]))
                                         # print(k, kk, i, j, ii, jj, "firstif")
@@ -109,6 +110,7 @@ def solve_problem(input_directory):
 
             solved = True
             final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen)
+
             return final_x, final_y, w, n, x, y, final_l, final_r, elapsed
             # print(time)
         else:
@@ -137,9 +139,9 @@ def solve_problem(input_directory):
 
 
 def main():
-    #input_directory = "./instances/ins-10.txt"
-    #solve_problem(input_directory)
-    solve_all(solve_problem, "./out/noRotation")
+    input_directory = "./instances/ins-6.txt"
+    solve_problem(input_directory)
+    #solve_all(solve_problem, "./out/noRotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
