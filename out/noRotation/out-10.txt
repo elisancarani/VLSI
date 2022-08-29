@@ -1,0 +1,6 @@
+n, w: 12 17
+[3, 3, 3, 3, 3, 3, 3, 4, 4, 4, 7, 7]	[3, 4, 5, 6, 7, 8, 9, 3, 8, 14, 3, 6]
+solution: 17.0
+[4, 14, 4, 14, 14, 11, 11, 0, 7, 0, 4, 4]	[8, 0, 3, 4, 10, 0, 8, 14, 3, 0, 0, 11]
+[False, False, False, False, False, False, False, False, False, False, False, False]
+time: 0.2139255000000002
