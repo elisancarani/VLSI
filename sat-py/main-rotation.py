@@ -91,7 +91,8 @@ def solve_problem(input_directory):
                         for ii in range(i+x[k]):
                             for jj in range(j+y[k]):
                                 if kk != k:
-                                    if ((i-x[kk]<ii<i or j-y[kk]<jj<j) and ii+x[kk]>i and jj+y[kk]>j) or (ii>=i and jj>=j):
+                                    # if ((i - y[kk] < ii < i or j - x[kk] < jj < j) and ii + y[kk] > i and jj + x[kk] > j) or (ii >= i and jj >= j):
+                                    if (ii + x[kk] > i and jj + y[kk] > j):
                                         false_other_rectangles.append(Not(solution[ii][jj][kk]))
                                 else:
                                     if i == ii and j == jj:
@@ -108,7 +109,8 @@ def solve_problem(input_directory):
                         for ii in range(i + y[k]):
                             for jj in range(j + x[k]):
                                 if kk != k:
-                                    if ((i - x[kk] < ii < i or j - y[kk] < jj < j) and ii + x[kk] > i and jj + y[kk] > j) or (ii >= i and jj >= j):
+                                    # if ((i - y[kk] < ii < i or j - x[kk] < jj < j) and ii + y[kk] > i and jj + x[kk] > j) or (ii >= i and jj >= j):
+                                    if (ii + x[kk] > i and jj + y[kk] > j):
                                         false_other_rectangles.append(Not(solution[ii][jj][kk]))
                                 else:
                                     if i == ii and j == jj:
@@ -125,7 +127,8 @@ def solve_problem(input_directory):
                         for ii in range(i + x[k]):
                             for jj in range(j + y[k]):
                                 if kk != k:
-                                    if ((i - y[kk] < ii < i or j - x[kk] < jj < j) and ii + y[kk] > i and jj + x[kk] > j) or (ii >= i and jj >= j):
+                                    # if ((i - y[kk] < ii < i or j - x[kk] < jj < j) and ii + y[kk] > i and jj + x[kk] > j) or (ii >= i and jj >= j):
+                                    if (ii + x[kk] > i and jj + y[kk] > j):
                                         false_other_rectangles.append(Not(solution[ii][jj][kk]))
                                 else:
                                     if i == ii and j == jj:
