@@ -171,14 +171,14 @@ def solve_problem(input_directory):
             print("elapsed:", elapsed)
 
             solved = True
-            final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen)
+            final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation, r=1 )
 
-            output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
+            """output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
             # PLOT SOLUTION
             fig, ax = plt.subplots(figsize=(5, 5))
             sns.heatmap(output_matrix, cmap="BuPu", linewidths=.5, linecolor="black", ax=ax)
             # sns.color_palette("Set2")
-            plt.show()
+            plt.show()"""
 
             return final_x, final_y, w, n, x, y, final_l, final_r, elapsed
             #print(time)
@@ -207,9 +207,9 @@ def solve_problem(input_directory):
 
 
 def main():
-    input_directory = "./instances/ins-2.txt"
-    solve_problem(input_directory)
-    #solve_all(solve_problem, "./out/Rotation")
+    #input_directory = "./instances/ins-2.txt"
+    #solve_problem(input_directory)
+    solve_all(solve_problem, "./out/Rotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
