@@ -1,0 +1,6 @@
+n, w: 4 8
+[3, 3, 5, 5]	[3, 5, 3, 5]
+solution: 8
+[5, 5, 0, 0]	[5, 0, 5, 0]
+[False, False, False, False]
+time: 0.506393415
