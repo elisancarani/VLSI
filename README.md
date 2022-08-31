@@ -15,5 +15,3 @@ The aim of this project is to find a solution to the VSLI problem for as many in
 A total of 40 instances are provided. We bring forward four possible methods: Constraint Programming
 (CP), Propositional SATisfability (SAT), and Satisfiability Modulo Theories (SMT) and Mixed-Integer
 Linear Programming (MIP).
-Page i
-
