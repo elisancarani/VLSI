@@ -1,5 +1,12 @@
 # VLSI
-VLSI Very Large Scale Integration 
-
-TO ADD THE SYMMETRY BREAKING CONSTRAINT IN THE SAT
-in lp it's not accurate, but it works a bit, if time is left we can make it accurate
+VLSI  
+Very Large Scale Integration refers to the trend of integrating circuits into silicon chips. A typical
+example is the smartphone. The modern trend of shrinking transistor sizes, allowing engineers to fit more
+and more transistors into the same area of silicon, has pushed the integration of more and more functions
+of cellphone circuitry into a single silicon die (i.e. plate).
+This enabled the modern cellphone to mature into a powerful tool that shrank from the size of a large
+brick-sized unit to a device small enough to comfortably carry in a pocket or purse, with a video camera,
+touchscreen, and other advanced features.
+The VLSI problem is analogous to “the strip packing problem”, from which we started our research.
+Since this problem is strongly NP-hard the study of this problem has important practical and theoretical
+significance 
