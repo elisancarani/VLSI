@@ -8,4 +8,12 @@ brick-sized unit to a device small enough to comfortably carry in a pocket or pu
 touchscreen, and other advanced features.
 The VLSI problem is analogous to “the strip packing problem”, from which we started our research.
 Since this problem is strongly NP-hard the study of this problem has important practical and theoretical
-significance 
+significance  
+  
+
+The aim of this project is to find a solution to the VSLI problem for as many instances as possible.
+A total of 40 instances are provided. We bring forward four possible methods: Constraint Programming
+(CP), Propositional SATisfability (SAT), and Satisfiability Modulo Theories (SMT) and Mixed-Integer
+Linear Programming (MIP).
+Page i
+
