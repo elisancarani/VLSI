@@ -66,9 +66,8 @@ def solve_problem(input_directory):
                         #problem += sol_x[k1] <= sol_x[k2] + w*place1[k1][k2]
                         #problem += sol_x[k1] >= sol_x[k2] + x[k2] - w*(1-place1[k1][k2])
                 if x[k1] + x[k2] >= w + 1:
-                    problem += sol_y[k1] <= sol_y[k2] + maxlen * place1[k1][k2]
+                    problem += sol_y[k1] + y[k1]  <= sol_y[k2] + maxlen * place1[k1][k2]
                     problem += sol_y[k1] >= sol_y[k2] + y[k2] - maxlen * (1 - place1[k1][k2])
-
     timeout = 300
     solver = CPLEX_CMD(path=path_to_cplex, timelimit = timeout)
 
@@ -102,9 +101,9 @@ def solve_problem(input_directory):
 
 
 def main():
-    #input_directory = "./instances/ins-40.txt"
-    #solve_problem(input_directory)
-    solve_all(solve_problem, "./out/noRotation")
+    input_directory = "./instances/ins-4.txt"
+    solve_problem(input_directory)
+    #solve_all(solve_problem, "./out/noRotation")
 
 
 # Press the green button in the gutter to run the script.
