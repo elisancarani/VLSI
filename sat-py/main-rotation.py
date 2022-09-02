@@ -171,7 +171,7 @@ def solve_problem(input_directory):
             print("elapsed:", elapsed)
 
             solved = True
-            final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation, r=1 )
+            final_x, final_y, final_r, final_l = get_solution(solver.model(), solution, w, l, n, maxlen, rotation)
 
             """output_matrix = display_solution(final_x, final_y, w, n, x, y, final_l, final_r)
             # PLOT SOLUTION
@@ -207,9 +207,9 @@ def solve_problem(input_directory):
 
 
 def main():
-    #input_directory = "./instances/ins-2.txt"
-    #solve_problem(input_directory)
-    solve_all(solve_problem, "./out/Rotation")
+    input_directory = "./instances/ins-1.txt"
+    solve_problem(input_directory)
+    #solve_all(solve_problem, "./out/Rotation")
 
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
